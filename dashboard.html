@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VACINACAT'S - Caderneta Virtual</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+
+    <header>
+        <h1>VACINACAT'S</h1>
+        <nav>
+            <a href="index.html" onclick="logout()">SAIR / LOGOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="autenticacao">
+            
+            <!-- Cadastro dos Detalhes do Gato e Histórico -->
+            <article class="card-form" style="max-width: 500px;">
+                <h2>CADERNETA VIRTUAL</h2>
+                <p>Atualize os dados e o histórico de vacinas do seu felino.</p>
+                
+                <form id="form-caderneta">
+                    <div class="campo">
+                        <label for="cad-nome">Nome do Gato:</label>
+                        <input type="text" id="cad-nome" required>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <div class="campo">
+                            <label for="cad-idade">Idade:</label>
+                            <input type="text" id="cad-idade" placeholder="Ex: 2 anos" required>
+                        </div>
+                        <div class="campo">
+                            <label for="cad-fase">Fase de Vida:</label>
+                            <select id="cad-fase" required>
+                                <option value="adulto">Adulto</option>
+                                <option value="filhote">Filhote (Protocolo Inicial)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <div class="campo">
+                            <label for="cad-raca">Raça:</label>
+                            <input type="text" id="cad-raca" placeholder="Ex: Vira-lata" required>
+                        </div>
+                        <div class="campo">
+                            <label for="cad-sexo">Sexo:</label>
+                            <select id="cad-sexo" required>
+                                <option value="Macho">Macho</option>
+                                <option value="Fêmea">Fêmea</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+                    <h3>Histórico de Aplicação</h3>
+
+                    <div class="campo-grupo">
+                        <div class="campo">
+                            <label for="data-polivalente">Última Polivalente:</label>
+                            <input type="date" id="data-polivalente" required>
+                        </div>
+                        <div class="campo">
+                            <label for="data-antirrabica">Última Antirrábica:</label>
+                            <input type="date" id="data-antirrabica" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">SALVAR E CALCULAR REFORÇOS</button>
+                </form>
+            </article>
+
+            <!-- Resultado dos Cálculos / Status da Caderneta -->
+            <article class="card-form" style="max-width: 500px; background-color: #fff;">
+                <h2>PRÓXIMAS VACINAS</h2>
+                <p>Veja abaixo o cronograma gerado para o seu pet:</p>
+                
+                <div id="resultado-caderneta" style="margin-top: 20px;">
+                    <p style="color: #666; font-style: italic;">Preencha os dados ao lado para calcular as próximas datas.</p>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Vacinacat. Todos os direitos reservados.</p>
+        <p>Cuidar da saúde do seu gatinho é também proteger quem você ama!</p>
+    </footer>
+
+    <script>
+        const emailLogado = sessionStorage.getItem('usuarioLogado');
+
+        if (!emailLogado) {
+            alert('Por favor, faça o login para acessar a caderneta!');
+            window.location.href = "login.html";
+        }
+
+        let usuarioDados = JSON.parse(localStorage.getItem(emailLogado));
+
+        function formatarDataBR(dataString) {
+            if (!dataString) return '--/--/----';
+            const partes = dataString.split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        function calcularProximaData(dataString, diasParaAdicionar) {
+            if (!dataString) return 'Não informada';
+            const dataObjeto = new Date(dataString + 'T00:00:00');
+            dataObjeto.setDate(dataObjeto.getDate() + diasParaAdicionar);
+            
+            const ano = dataObjeto.getFullYear();
+            const mes = String(dataObjeto.getMonth() + 1).padStart(2, '0');
+            const dia = String(dataObjeto.getDate()).padStart(2, '0');
+            
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function atualizarExibicao() {
+            document.getElementById('cad-nome').value = usuarioDados.nomeGato || '';
+            document.getElementById('cad-idade').value = usuarioDados.idade || '';
+            document.getElementById('cad-fase').value = usuarioDados.fase || 'adulto';
+            document.getElementById('cad-raca').value = usuarioDados.raca || '';
+            document.getElementById('cad-sexo').value = usuarioDados.sexo || 'Macho';
+            document.getElementById('data-polivalente').value = usuarioDados.dataPoli || '';
+            document.getElementById('data-antirrabica').value = usuarioDados.dataAnti || '';
+
+            const painelResultado = document.getElementById('resultado-caderneta');
+
+            if (usuarioDados.dataPoli || usuarioDados.dataAnti) {
+                let diasPoli = usuarioDados.fase === 'filhote' ? 30 : 365;
+                
+                let blocoPolivalente = '';
+                let blocoAntirrabica = '';
+
+                if (usuarioDados.dataPoli) {
+                    const proxPoli = calcularProximaData(usuarioDados.dataPoli, diasPoli);
+                    blocoPolivalente = `
+                        <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <p style="margin: 0 0 5px 0; font-weight: bold; color: #2c3e50;">💉 VACINA POLIVALENTE</p>
+                            <p style="margin: 2px 0; font-size: 14px; color: #666;">Última dose: ${formatarDataBR(usuarioDados.dataPoli)}</p>
+                            <p style="margin: 2px 0; font-size: 15px; color: #c0392b;"><strong>Próxima aplicação: ${proxPoli}</strong> ${usuarioDados.fase === 'filhote' ? '(Reforço - 30 dias)' : '(Reforço Anual)'}</p>
+                        </div>
+                    `;
+                }
+
+                if (usuarioDados.dataAnti) {
+                    const proxAnti = calcularProximaData(usuarioDados.dataAnti, 365);
+                    blocoAntirrabica = `
+                        <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <p style="margin: 0 0 5px 0; font-weight: bold; color: #2c3e50;">🦠 VACINA ANTIRRÁBICA</p>
+                            <p style="margin: 2px 0; font-size: 14px; color: #666;">Última dose: ${formatarDataBR(usuarioDados.dataAnti)}</p>
+                            <p style="margin: 2px 0; font-size: 15px; color: #c0392b;"><strong>Próxima aplicação: ${proxAnti}</strong> (Reforço Anual)</p>
+                        </div>
+                    `;
+                }
+
+                painelResultado.innerHTML = `
+                    <div style="background: #eef7f2; padding: 15px; border-left: 5px solid #2ecc71; border-radius: 4px; margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 5px 0; color: #27ae60;">🐾 Ficha de ${usuarioDados.nomeGato.toUpperCase()}</h4>
+                        <p style="margin: 3px 0;"><strong>Sexo:</strong> ${usuarioDados.sexo || 'Macho'} | <strong>Raça:</strong> ${usuarioDados.raca || 'Não informada'}</p>
+                        <p style="margin: 3px 0;"><strong>Idade:</strong> ${usuarioDados.idade || 'Não informada'} (${usuarioDados.fase === 'filhote' ? 'Filhote' : 'Adulto'})</p>
+                    </div>
+                    ${blocoPolivalente}
+                    ${blocoAntirrabica}
+                `;
+            } else {
+                painelResultado.innerHTML = `<p style="color: #666; font-style: italic;">Insira as datas das últimas vacinas para calcular o próximo reforço.</p>`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', atualizarExibicao);
+
+        document.getElementById('form-caderneta').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            usuarioDados.nomeGato = document.getElementById('cad-nome').value;
+            usuarioDados.idade = document.getElementById('cad-idade').value;
+            usuarioDados.fase = document.getElementById('cad-fase').value;
+            usuarioDados.raca = document.getElementById('cad-raca').value;
+            usuarioDados.sexo = document.getElementById('cad-sexo').value;
+            usuarioDados.dataPoli = document.getElementById('data-polivalente').value;
+            usuarioDados.dataAnti = document.getElementById('data-antirrabica').value;
+
+            localStorage.setItem(emailLogado, JSON.stringify(usuarioDados));
+            
+            alert('Caderneta updated e salva com sucesso!');
+            atualizarExibicao();
+        });
+
+        function logout() {
+            sessionStorage.removeItem('usuarioLogado');
+            alert("Saindo da conta de forma segura...");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

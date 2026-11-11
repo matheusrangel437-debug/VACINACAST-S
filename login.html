@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VACINACAT'S - Cadastro & Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>VACINACAT'S</h1>
+        <nav>
+            <a href="index.html">VOLTAR AO INÍCIO</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="autenticacao">
+            
+            <!-- Formulário de Cadastro -->
+            <article class="card-form">
+                <h2>CRIAR CONTA</h2>
+                <p>Cadastre-se para acompanhar as vacinas do seu gatinho.</p>
+                
+                <form id="form-cadastro">
+                    <div class="campo">
+                        <label for="nome-gato">Nome do Gato:</label>
+                        <input type="text" id="nome-gato" placeholder="Ex: Mingau" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="email-cadastro">E-mail:</label>
+                        <input type="email" id="email-cadastro" placeholder="seu-email@exemplo.com" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="senha-cadastro">Senha:</label>
+                        <input type="password" id="senha-cadastro" placeholder="Crie uma senha forte" required>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">CADASTRAR GATINHO</button>
+                </form>
+            </article>
+
+            <!-- Formulário de Login -->
+            <article class="card-form">
+                <h2>JÁ TENHO CONTA</h2>
+                
+                <form id="form-login">
+                    <div class="campo">
+                        <label for="email-login">E-mail:</label>
+                        <input type="email" id="email-login" placeholder="seu-email@exemplo.com" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="senha-login">Senha:</label>
+                        <input type="password" id="senha-login" placeholder="Sua senha" required>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">ENTRAR</button>
+                </form>
+            </article>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Vacinacat. Todos os direitos reservados.</p>
+        <p>Cuidar da saúde do seu gatinho é também proteger quem você ama!</p>
+    </footer>
+
+    <!-- SCRIPT JAVASCRIPT QUE FAZ A MÁGICA ACONTECER -->
+        <script>
+        // Lógica de Cadastro
+        document.getElementById('form-cadastro').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nomeGato = document.getElementById('nome-gato').value;
+            const email = document.getElementById('email-cadastro').value.toLowerCase();
+            const senha = document.getElementById('senha-cadastro').value;
+
+            if (localStorage.getItem(email)) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+
+            // Guardamos os dados estruturados do gato e usuário
+            const usuario = {
+                nomeGato: nomeGato,
+                senha: senha,
+                idade: '',
+                fase: 'adulto',
+                raca: '',
+                dataPoli: '',
+                dataAnti: ''
+            };
+
+            localStorage.setItem(email, JSON.stringify(usuario));
+            alert('Cadastro realizado com sucesso! Agora você pode fazer o login no formulário ao lado.');
+            document.getElementById('form-cadastro').reset();
+        });
+
+        // Lógica de Login
+        document.getElementById('form-login').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email-login').value.toLowerCase();
+            const senha = document.getElementById('senha-login').value;
+            const dadosSalvos = localStorage.getItem(email);
+
+            if (!dadosSalvos) {
+                alert('E-mail não encontrado! Por favor, crie uma conta primeiro.');
+                return;
+            }
+
+            const usuario = JSON.parse(dadosSalvos);
+
+            if (usuario.senha === senha) {
+                // MÁGICA AQUI: Salva temporariamente qual e-mail está logado nesta sessão
+                sessionStorage.setItem('usuarioLogado', email);
+                
+                alert(`Bem-vindo de volta! Abrindo a caderneta do(a) ${usuario.nomeGato}.`);
+                window.location.href = "dashboard.html"; // Redireciona de verdade
+            } else {
+                alert('Senha incorreta! Tente novamente.');
+            }
+        });
+    </script>
+
+
+</body>
+</html>

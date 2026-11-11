@@ -1,0 +1,515 @@
+/* ==========================================================================
+   IMPORTAÇÃO DAS FONTES
+   ========================================================================== */
+@import url("[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Poppins:wght@500;600&display=swap)");
+
+/* ==========================================================================
+   CONFIGURAÇÕES GERAIS E PALETA DE CORES
+   ========================================================================== */
+:root {
+    --purple-main: #6c5ce7;
+    --purple-dark: #4b3ca3;
+    --purple-light: #f3f0ff;
+    --purple-glow: #a29bfe;
+    --accent-green: #00b894;
+    --accent-green-hover: #009474;
+    --text-dark: #2d3436;
+    --text-light: #636e72;
+    --white: #ffffff;
+    --bg-global: #fafafa;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background-color: var(--bg-global);
+    color: var(--text-dark);
+    font-family: "Nunito", sans-serif;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   EFEITO DE PATINHAS NO FUNDO
+   ========================================================================== */
+body::before,
+body::after {
+    content: "🐾  🐾  🐾";
+    position: fixed;
+    width: 40px;
+    color: rgba(108, 92, 231, 0.06);
+    font-size: 28px;
+    line-height: 2.5;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::before {
+    top: 100px;
+    left: 30px;
+    transform: rotate(-15deg);
+}
+
+body::after {
+    right: 40px;
+    bottom: 120px;
+    transform: rotate(20deg);
+}
+
+/* ==========================================================================
+   CABEÇALHO E NAVEGAÇÃO
+   ========================================================================== */
+header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 40px;
+    background: linear-gradient(
+        135deg,
+        var(--purple-dark),
+        var(--purple-main)
+    );
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+}
+
+header h1 {
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+header nav a {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+        color 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+}
+
+header nav a:hover,
+header nav a:focus-visible {
+    border-color: var(--white);
+    background-color: var(--white);
+    color: var(--purple-dark);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    outline: none;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL
+   ========================================================================== */
+main {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 30px;
+}
+
+.produtos article {
+    padding: 30px;
+    border: 1px solid rgba(108, 92, 231, 0.05);
+    border-radius: 16px;
+    background-color: var(--white);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+    text-align: center;
+    transition:
+        transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        box-shadow 0.4s ease,
+        border-color 0.4s ease;
+}
+
+.produtos article:hover {
+    border-color: rgba(108, 92, 231, 0.2);
+    box-shadow: 0 20px 30px rgba(108, 92, 231, 0.12);
+    transform: translateY(-8px);
+}
+
+.produtos h2 {
+    position: relative;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    color: var(--purple-dark);
+    font-family: "Poppins", sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.produtos h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 50px;
+    height: 3px;
+    border-radius: 2px;
+    background-color: var(--purple-main);
+    transform: translateX(-50%);
+}
+
+.produtos img {
+    display: block;
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    margin: 20px auto;
+    transition: transform 0.3s ease;
+}
+
+.produtos article:hover img {
+    transform: scale(1.08) rotate(2deg);
+}
+
+.produtos p {
+    color: var(--text-light);
+    font-family: "Nunito", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* ==========================================================================
+   AUTENTICAÇÃO E CADERNETA
+   ========================================================================== */
+.autenticacao {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+}
+
+.card-form {
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 16px;
+    background-color: var(--white);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    transition:
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.card-form:hover {
+    border-color: rgba(108, 92, 231, 0.15);
+    box-shadow: 0 15px 35px rgba(108, 92, 231, 0.08);
+}
+
+.card-form h2 {
+    margin-bottom: 8px;
+    color: var(--purple-dark);
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.card-form h3 {
+    margin-bottom: 15px;
+    color: var(--purple-main);
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.card-form p {
+    margin-bottom: 25px;
+    color: var(--text-light);
+    font-family: "Nunito", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Campos lado a lado */
+.campo-grupo {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.campo-grupo .campo {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Campos de formulário */
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.campo label {
+    margin-bottom: 8px;
+    overflow: hidden;
+    color: var(--text-dark);
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    outline: none;
+    background-color: #fafafa;
+    color: var(--text-dark);
+    font-family: "Nunito", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    transition:
+        border-color 0.3s ease,
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.campo input:focus,
+.campo select:focus {
+    border-color: var(--purple-main);
+    background-color: var(--white);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.15);
+}
+
+.campo input::placeholder {
+    color: #a0aec0;
+}
+
+/* ==========================================================================
+   BOTÕES
+   ========================================================================== */
+.btn-enviar {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(
+        135deg,
+        var(--purple-main),
+        var(--purple-dark)
+    );
+    color: var(--white);
+    box-shadow: 0 4px 10px rgba(108, 92, 231, 0.25);
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        filter 0.3s ease;
+}
+
+.btn-enviar:hover {
+    box-shadow: 0 6px 15px rgba(108, 92, 231, 0.4);
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.btn-enviar:focus-visible {
+    outline: 3px solid var(--purple-glow);
+    outline-offset: 3px;
+}
+
+.btn-enviar:active {
+    box-shadow: 0 3px 8px rgba(108, 92, 231, 0.3);
+    transform: translateY(0);
+}
+
+.btn-enviar:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+    opacity: 0.65;
+    transform: none;
+}
+
+/* ==========================================================================
+   PAINEL DE RESULTADOS
+   ========================================================================== */
+#resultado-caderneta {
+    animation: fade-in 0.5s ease forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#resultado-caderneta div[style*="border-left"] {
+    border-left-color: var(--purple-main) !important;
+    border-radius: 12px !important;
+    background-color: var(--purple-light) !important;
+}
+
+#resultado-caderneta h4 {
+    color: var(--purple-dark) !important;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   RODAPÉ
+   ========================================================================== */
+footer {
+    position: relative;
+    z-index: 10;
+    margin-top: auto;
+    padding: 25px 20px;
+    border-top: 4px solid var(--purple-main);
+    background-color: #1e1e24;
+    color: #a0aec0;
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+footer p:first-child {
+    color: var(--white);
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 20px;
+        text-align: center;
+    }
+
+    header nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    main {
+        padding: 30px 16px;
+    }
+
+    .autenticacao {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-form {
+        max-width: 100%;
+        padding: 25px 20px;
+    }
+
+    .campo-grupo {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    body::before,
+    body::after {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    header nav {
+        width: 100%;
+    }
+
+    header nav a {
+        width: 100%;
+    }
+
+    .produtos {
+        gap: 20px;
+    }
+
+    .produtos article {
+        padding: 22px 18px;
+    }
+
+    .produtos p {
+        text-align: left;
+    }
+}
+
+/* Reduz animações para usuários que ativaram essa preferência */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
